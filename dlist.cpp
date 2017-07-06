@@ -148,7 +148,8 @@ size_t DList::size() const
 std::ostream &operator<<(std::ostream &os, DList &l)
 {
     for (DList::DIterator i = l.begin(); i != l.end(); ++i)
-        os << *i << std::endl;
+        os << *i << " ";
+    os<<std::endl;
     return os;
 }
 
@@ -229,6 +230,16 @@ bool DList::DIterator::operator!=(const DIterator &it) const
     return !(it == *this);
 }
 
+bool DList::DIterator::operator <(const DIterator &it) const
+{
+    return (this->current->data>it.current->data);
+}
+
+bool DList::DIterator::operator >(const DIterator &it) const
+{
+    return (this->current->data<it.current->data);
+}
+
 DList::DIterator DList::find(const int &x)
 {
     DIterator DList_DIterator = this->begin();
@@ -240,6 +251,28 @@ DList::DIterator DList::find(const int &x)
         ++DList_DIterator;
     }
     return end_DIterator;
+}
+
+//the first element is greater than the given(первый элемент больше  заданного )
+DList::DIterator DList::findFEGG(const int &x)
+{
+    DIterator DList_DIterator = this->begin();
+    DIterator end_DIterator = this->end();
+    if (this->size()>1)
+    {
+        if ((DList_DIterator.current->prev==nullptr)&&(DList_DIterator.current->data>x))
+            return DList_DIterator;
+        while (DList_DIterator != end_DIterator)
+        {
+            if ((DList_DIterator.current->data<x) &&(DList_DIterator.current->next->data>x))
+                return ++DList_DIterator;
+            else ++DList_DIterator;
+        }
+
+        //if (DList_DIterator == end_DIterator) return this->end();
+    }
+    else if (DList_DIterator.current->data>x)
+        return DList_DIterator;
 }
 
 void DList::insert_after(const DIterator &it, const int &x)
@@ -264,12 +297,24 @@ void DList::insert_before(const DIterator &it, const int &x)
         ++DList_DIterator;
 
     node* to_insert = new node;
-    to_insert->data = x;
-    to_insert->next = DList_DIterator.current;
-    to_insert->prev = DList_DIterator.current->prev;
 
-    DList_DIterator.current->prev->next = to_insert;
-    DList_DIterator.current->prev = to_insert;
+    if (DList_DIterator.current->prev!=nullptr)
+    {
+        to_insert->data = x;
+        to_insert->next = DList_DIterator.current;
+        to_insert->prev = DList_DIterator.current->prev;
+
+        DList_DIterator.current->prev->next = to_insert;
+        DList_DIterator.current->prev = to_insert;
+    }
+    else
+    {
+        to_insert->data=x;
+        to_insert->next=DList_DIterator.current;
+        to_insert->prev=nullptr;
+        DList_DIterator.current->prev=to_insert;
+        first = first->prev;
+    }
 }
 
 void DList::remove(const DIterator &it)

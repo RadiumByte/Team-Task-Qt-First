@@ -60,7 +60,8 @@ public:
 
         bool operator==(const DIterator &it) const;
         bool operator!=(const DIterator &it) const;
-
+        bool operator <(const DIterator &it) const;
+        bool operator >(const DIterator &it) const;
         friend class DList;
 
     }; //--class DIterator--//
@@ -69,6 +70,7 @@ public:
     DIterator end();
 
     DIterator find(const int &x);
+    DIterator findFEGG(const int &x);
 
     // Вставка элемента, после элемента на который указывает итератор
     void insert_after(const DIterator &it, const int &x);
