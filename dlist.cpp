@@ -151,15 +151,15 @@ size_t DList::size() const
 // Two overloads of stream output
 std::ostream &operator<<(std::ostream &os, DList &l)
 {
-    for (DList::DIterator i = l.begin(); i != l.end(); ++i)
+    for (auto i = l.begin(); i != l.end(); ++i)
         os << *i << " ";
-    os<<std::endl;
+    os << endl;
     return os;
 }
 
 QTextStream &operator<<(QTextStream &os, DList &l)
 {
-    for (DList::DIterator i = l.begin(); i != l.end(); ++i)
+    for (auto i = l.begin(); i != l.end(); ++i)
         os << *i << " ";
     return os;
 }
