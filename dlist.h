@@ -14,6 +14,7 @@ public:
     DList &operator=(const DList &l);
     ~DList();
 
+    // returns the count of elements
     size_t size() const;
 
     bool is_empty() const
@@ -49,39 +50,45 @@ public:
     public:
         int &operator*();
 
-        // Инкремент (префиксный)
+        // increment (prefix)
         DIterator &operator++();
-        // Инкремент (постфиксный)
+        // increment (postfix)
         DIterator operator++(int);
-        // Декремент (префиксный)
+        // decrement (prefix)
         DIterator &operator--();
-        // Декремент (постфиксный)
+        // decrement (postfix)
         DIterator operator--(int);
 
         bool operator==(const DIterator &it) const;
         bool operator!=(const DIterator &it) const;
-        bool operator <(const DIterator &it) const;
-        bool operator >(const DIterator &it) const;
+        bool operator<(const DIterator &it) const;
+        bool operator>(const DIterator &it) const;
         friend class DList;
 
     }; //--class DIterator--//
 
+    // returns iterator to the head of list
     DIterator begin();
+
+    // returns iterator to the element after last
     DIterator end();
 
-    DIterator find(const int &x);
-    DIterator findFEGG(const int &x);
+    // returns iterator to the found element X
+    DIterator find(const int &x) const;
 
-    // Вставка элемента, после элемента на который указывает итератор
+    // returns interator to the first element larger than X
+    DIterator findFEGG(const int &x) const;
+
+    // inserts element after iterator
     void insert_after(const DIterator &it, const int &x);
 
-    // Вставка элемента, перед элементом на который указывает итератор
+    // inserts element before iterator
     void insert_before(const DIterator &it, const int &x);
 
-    // Удаление элемента на который указывает итератор
+    // deleting element pointed by iterator
     void remove(const DIterator &it);
 
-};   //--class DList--//
+};  //--class DList--//
 
 std::ostream &operator<<(std::ostream &os, DList &l);
 QTextStream &operator<<(QTextStream &os, DList &l);

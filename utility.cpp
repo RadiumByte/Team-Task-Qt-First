@@ -1,45 +1,43 @@
-#include"dlist.h"
-#include"utility.h"
-#include<limits>
-#include<QString>
-#include<QTextStream>
-#include<iostream>
+#include "dlist.h"
+#include "utility.h"
 
 using namespace std;
 
-void Program1(DList &list1)
+void Task(DList &input)
 {
-    cout<<"The line terminator is '.'"<<endl;
-    QString b;
+    cout << "The line terminator is '.'" << endl;
+    QString buffer;
     QTextStream IN(stdin);
-    int max=numeric_limits<int>::min();
-
+    int max = numeric_limits<int>::min();
     do
     {
-        IN>>b;
-        if (b=='.')
+        IN >> buffer;
+        if (buffer == '.')
             break;
         else
-            if (list1.is_empty())    // если пустой - добавляем
+            if (input.is_empty())   // if input number is first
             {
-                list1.push_front(b.toInt());
-                max=b.toInt();
+                input.push_front(buffer.toInt());
+                max = buffer.toInt();
             }
             else
-                if (list1.find(b.toInt())==list1.end())  // если нет повторений
+                if (input.find(buffer.toInt()) == input.end())   // preventing of duplicating
                 {
-                    if (b.toInt()>max)
+                    if (buffer.toInt() > max)             // pushing back the largest number
                     {
-                        max=b.toInt();
-                        list1.push_back(b.toInt());
+                        max = buffer.toInt();
+                        input.push_back(buffer.toInt());
                     }
                     else
-                        list1.insert_before(list1.findFEGG(b.toInt()),b.toInt());
+                        // if number will be in the middle of the list
+                        input.insert_before(input.findFEGG(buffer.toInt()), buffer.toInt());
                 }
 
     }
-    while (b!='.');
+    while (buffer != '.');
 
-    if (list1.is_empty()) throw std::runtime_error("List is empty");
-    else cout<<list1;
+    if (input.is_empty())
+        throw std::runtime_error("List is empty");
+    else
+        cout << input;
 }
