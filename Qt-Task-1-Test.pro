@@ -1,9 +1,10 @@
 QT += core
+QT += testlib
 QT -= gui
 
 CONFIG += c++11
 
-TARGET = Team_task_1
+TARGET = Qt-Task-1-Test
 CONFIG += console
 CONFIG -= app_bundle
 
@@ -11,6 +12,7 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     dlist.cpp \
+    qtest1.cpp \
     utility.cpp
 
 # The following define makes your compiler emit warnings if you use
@@ -26,4 +28,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
     dlist.h \
+    qtest1.h \
     utility.h

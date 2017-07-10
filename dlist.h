@@ -12,9 +12,9 @@ public:
     DList();
     DList(const DList &l);
     DList &operator=(const DList &l);
+    DList(const std::initializer_list<int> & list);
     ~DList();
 
-    // returns the count of elements
     size_t size() const;
 
     bool is_empty() const
@@ -29,6 +29,7 @@ public:
     void push_front(const int &x);
     void pop_front();
     int front() const;
+    void erase();
 
 private:
     struct node
@@ -50,45 +51,39 @@ public:
     public:
         int &operator*();
 
-        // increment (prefix)
+        // Инкремент (префиксный)
         DIterator &operator++();
-        // increment (postfix)
+        // Инкремент (постфиксный)
         DIterator operator++(int);
-        // decrement (prefix)
+        // Декремент (префиксный)
         DIterator &operator--();
-        // decrement (postfix)
+        // Декремент (постфиксный)
         DIterator operator--(int);
 
         bool operator==(const DIterator &it) const;
         bool operator!=(const DIterator &it) const;
-        bool operator<(const DIterator &it) const;
-        bool operator>(const DIterator &it) const;
+        bool operator <(const DIterator &it) const;
+        bool operator >(const DIterator &it) const;
         friend class DList;
 
     }; //--class DIterator--//
 
-    // returns iterator to the head of list
     DIterator begin();
-
-    // returns iterator to the element after last
     DIterator end();
 
-    // returns iterator to the found element X
-    DIterator find(const int &x) const;
+    DIterator find(const int &x);
+    DIterator findFEGG(const int &x);
 
-    // returns interator to the first element larger than X
-    DIterator findFEGG(const int &x) const;
-
-    // inserts element after iterator
+    // Вставка элемента, после элемента на который указывает итератор
     void insert_after(const DIterator &it, const int &x);
 
-    // inserts element before iterator
+    // Вставка элемента, перед элементом на который указывает итератор
     void insert_before(const DIterator &it, const int &x);
 
-    // deleting element pointed by iterator
+    // Удаление элемента на который указывает итератор
     void remove(const DIterator &it);
-
-};  //--class DList--//
+friend bool operator==(DList &l1,DList &l2);
+};   //--class DList--//
 
 std::ostream &operator<<(std::ostream &os, DList &l);
 QTextStream &operator<<(QTextStream &os, DList &l);

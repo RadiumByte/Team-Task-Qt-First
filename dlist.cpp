@@ -1,5 +1,24 @@
 #include "dlist.h"
 
+void DList::copy_DList(const node * from_first, const node * from_last)
+{
+    first = nullptr;
+    last = nullptr;
+    node **to = &first;
+    const node *from = from_first;
+    while (from != from_last->next)
+    {
+        node *prev = *to;
+        *to = new node;
+        (*to)->prev = prev;
+        (*to)->data = from->data;
+        to = &(*to)->next;
+        from = from->next;
+    }
+    *to = nullptr;
+    last = *to;
+}
+
 void DList::delete_DList()
 {
     while (first != last)
@@ -13,36 +32,31 @@ void DList::delete_DList()
     last = nullptr;
 }
 
-DList::DList()   // default constructor
+DList::DList()
 {
     first = last = nullptr;
 }
 
-DList::DList(const DList & l)   // copy constructor
+DList::DList(const DList & l)
 {
     copy_DList(l.first, l.last);
 }
 
-void DList::copy_DList(const node * from_first, const node * from_last)
+
+DList::DList(const std::initializer_list<int> & list)
 {
-    first = nullptr;
-    last = nullptr;
 
-    node **to = &first;
-    const node *from = from_first;
-    while (from != from_last->next)
-    {
-        node *prev = *to;
-        *to = new node;
-
-        (*to)->prev = prev;
-        (*to)->data = from->data;
-        to = &(*to)->next;
-
-        from = from->next;
-    }
-    *to = nullptr;
-    last = *to;
+    //if (list.size()==0) return nullptr;
+    //else
+    //{
+        first = last = nullptr;
+        for(auto i=list.begin();i!=list.end();++i)
+        {
+            this->push_back(*i);
+        }
+        //this->first=this->begin().current;
+        //this->last=this->end().current;
+    //}
 }
 
 DList & DList::operator=(const DList & l)
@@ -79,7 +93,7 @@ void DList::push_back(const int & x)
 void DList::pop_back()
 {
     if (last == nullptr)
-        throw std::runtime_error("List is empty");
+        return;
     else
     {
         node* to_delete = last;
@@ -92,14 +106,14 @@ void DList::pop_back()
 int DList::back() const
 {
     if (is_empty())
-        throw std::out_of_range("List is empty");
+        throw std::out_of_range("Попытка доступа к элементу пустого списка");
     return last->data;
 }
 
 int DList::front() const
 {
     if (is_empty())
-        throw std::out_of_range("List is empty");
+        throw std::out_of_range("Попытка доступа к элементу пустого списка");
     return first->data;
 }
 
@@ -140,7 +154,7 @@ size_t DList::size() const
         return 0;
     size_t count = 0;
     node* current_in_DList = first;
-    while (current_in_DList != last)  // counting of elements
+    while (current_in_DList != last)
     {
         count++;
         current_in_DList = current_in_DList->next;
@@ -148,21 +162,43 @@ size_t DList::size() const
     return count + 1;
 }
 
-// Two overloads of stream output
+void DList::erase(){
+    node*temp=this->begin().current;
+    this->first=this->last=nullptr;
+    delete temp;
+}
+
 std::ostream &operator<<(std::ostream &os, DList &l)
 {
-    for (auto i = l.begin(); i != l.end(); ++i)
+    for (DList::DIterator i = l.begin(); i != l.end(); ++i)
         os << *i << " ";
-    os << endl;
+    os<<std::endl;
     return os;
 }
 
-QTextStream &operator<<(QTextStream &os, DList &l)
+bool operator==(DList &l1,DList &l2)
 {
-    for (auto i = l.begin(); i != l.end(); ++i)
-        os << *i << " ";
-    return os;
+    if (l1.is_empty()&&l2.is_empty()) return true;
+    if (l1.size()!=l2.size()) return false;
+    else
+    {
+        DList::DIterator i=l1.begin();
+        DList::DIterator j=l2.begin();
+        {
+            while (i!=l1.end())
+            {
+                if (*i!=*j) return false;
+                else
+                {
+                    ++i;
+                    ++j;
+                }
+            }
+        }
+        return true;
+    }
 }
+
 /////////////////////////////////////////
 
 DList::DIterator DList::begin()
@@ -182,17 +218,16 @@ DList::DIterator DList::end()
 
 int& DList::DIterator::operator*()
 {
-    // if current position of iterator is null
-    if (*this == this->collection->end())
-        throw std::out_of_range("Out of range in list");
+    if (*this == this->collection->end())             //Если текущее положение итератора == концу коллекции
+        throw std::out_of_range("Выход за границы коллекции");
 
     return this->current->data;
 }
 
 DList::DIterator& DList::DIterator::operator++()
 {
-    if (this->current == nullptr)
-        throw std::out_of_range("Out of range in list");
+    if (this->current == nullptr)             //Если текущее положение итератора == последнему элементу коллекции
+        throw std::out_of_range("Выход за границы коллекции");
 
     this->current = this->current->next;
     return *this;
@@ -203,16 +238,16 @@ DList::DIterator DList::DIterator::operator++(int)
     DIterator old(this->collection, this->current);
 
     if (this->current == nullptr)
-        throw std::out_of_range("Out of range in list");
+        throw std::out_of_range("Выход за границы коллекции");
 
     this->current = this->current->next;
-    return old;
+    return old;                  //Вернется старый итератор, но побочный эффект изменит текущее положение
 }
 
 DList::DIterator& DList::DIterator::operator--()
 {
-    if (this->current == nullptr)
-        throw std::out_of_range("Out of range in list");
+    if (this->current == nullptr)  //Если текущее положение итератора == началу коллекции
+        throw std::out_of_range("Выход за границы коллекции");
 
     this->current = this->current->prev;
     return *this;
@@ -223,10 +258,10 @@ DList::DIterator DList::DIterator::operator--(int)
     DIterator old(this->collection, this->current);
 
     if (this->current == nullptr)
-        throw std::out_of_range("Out of range in list");
+        throw std::out_of_range("Выход за границы коллекции");
 
     this->current = this->current->prev;
-    return old;
+    return old;                  //Вернется старый итератор, но побочный эффект изменит текущее положение
 }
 
 bool DList::DIterator::operator==(const DIterator &it) const
@@ -251,7 +286,7 @@ bool DList::DIterator::operator >(const DIterator &it) const
     return (this->current->data<it.current->data);
 }
 
-DList::DIterator DList::find(const int &x) const
+DList::DIterator DList::find(const int &x)
 {
     DIterator DList_DIterator = this->begin();
     DIterator end_DIterator = this->end();
@@ -264,22 +299,25 @@ DList::DIterator DList::find(const int &x) const
     return end_DIterator;
 }
 
-DList::DIterator DList::findFEGG(const int &x) const
+//the first element is greater than the given(первый элемент больше  заданного )
+DList::DIterator DList::findFEGG(const int &x)
 {
     DIterator DList_DIterator = this->begin();
     DIterator end_DIterator = this->end();
-    if (this->size() > 1)
+    if (this->size()>1)
     {
-        if ((DList_DIterator.current->prev == nullptr) && (DList_DIterator.current->data > x))
+        if ((DList_DIterator.current->prev==nullptr)&&(DList_DIterator.current->data>x))
             return DList_DIterator;
         while (DList_DIterator != end_DIterator)
         {
-            if ((DList_DIterator.current->data < x) && (DList_DIterator.current->next->data > x))
+            if ((DList_DIterator.current->data<x) &&(DList_DIterator.current->next->data>x))
                 return ++DList_DIterator;
             else ++DList_DIterator;
         }
+
+        //if (DList_DIterator == end_DIterator) return this->end();
     }
-    else if (DList_DIterator.current->data > x)
+    else if (DList_DIterator.current->data>x)
         return DList_DIterator;
 }
 
@@ -317,10 +355,10 @@ void DList::insert_before(const DIterator &it, const int &x)
     }
     else
     {
-        to_insert->data = x;
-        to_insert->next = DList_DIterator.current;
-        to_insert->prev = nullptr;
-        DList_DIterator.current->prev = to_insert;
+        to_insert->data=x;
+        to_insert->next=DList_DIterator.current;
+        to_insert->prev=nullptr;
+        DList_DIterator.current->prev=to_insert;
         first = first->prev;
     }
 }
@@ -332,24 +370,24 @@ void DList::remove(const DIterator &it)
     while (DList_DIterator != it)
         ++DList_DIterator;
 
-    // if removing the first element of list
-    if (DList_DIterator == this->begin())
+    if (DList_DIterator == this->begin())       //Если удаляем первый элемент коллекции
         this->pop_front();
-    // if removing the last element of list
-    else if (DList_DIterator.current == this->end().current->prev)
+    else if (it.current->next==nullptr)    //Если удаляем последний элемент коллекции
         this->pop_back();
-    // if removing the element from the middle
-    else
+    else                              //Если удаляем элемент из середины коллекции
     {
-        DIterator prev_DIterator = DList_DIterator--;
+        node *temp;
+        temp= DList_DIterator.current;
+        //temp->next = nullptr;
+        //temp->prev = nullptr;
+        /*DIterator prev_DIterator = DList_DIterator--;
         DIterator next_DIterator = DList_DIterator++;
-        node *temp = DList_DIterator.current;
-        temp->next = nullptr;
-        temp->prev = nullptr;
 
         prev_DIterator.current->next = next_DIterator.current;
-        next_DIterator.current->prev = prev_DIterator.current;
+        next_DIterator.current->prev = prev_DIterator.current;*/
+
+        DList_DIterator.current->prev->next=DList_DIterator.current->next;
+        DList_DIterator.current->next->prev=DList_DIterator.current->prev;
         delete temp;
     }
 }
-
