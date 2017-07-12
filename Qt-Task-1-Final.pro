@@ -1,10 +1,10 @@
 QT += core
-QT += testlib
 QT -= gui
+QT += testlib
 
 CONFIG += c++11
 
-TARGET = Qt-Task-1-Test
+TARGET = Qt-Task-1-Final
 CONFIG += console
 CONFIG -= app_bundle
 

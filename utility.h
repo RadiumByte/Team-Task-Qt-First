@@ -1,7 +1,12 @@
 #ifndef UTILITY_H
 #define UTILITY_H
-#include "dlist.h"
 
+#include <limits>
+#include <QString>
+#include <QTextStream>
+#include <iostream>
+
+#include "dlist.h"
 
 void Program1(DList&list1);
 

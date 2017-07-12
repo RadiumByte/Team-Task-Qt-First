@@ -1,6 +1,8 @@
 #ifndef QTEST1_H
 #define QTEST1_H
 
+#include <QTest>
+#include <iostream>
 #include <QObject>
 
 class Test_DList : public QObject
@@ -9,7 +11,7 @@ class Test_DList : public QObject
 public:
     explicit Test_DList(QObject *parent = 0);
 
-private slots: // должны быть приватными
+private slots: //they should be private
     //DList
     void initTestCase();
     void push_back();
@@ -19,8 +21,11 @@ private slots: // должны быть приватными
     void pop_front();
     void back();
     void front();
+
     /////////////////////////////////////////////
-    void message();//message
+
+    void message();
+
     //DIterator
     void begin();
     void end();
@@ -30,7 +35,5 @@ private slots: // должны быть приватными
     void insert_before();
     void remove();
     void cleanupTestCase();
-
-
 };
 #endif // QTEST1_H

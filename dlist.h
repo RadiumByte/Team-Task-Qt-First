@@ -22,14 +22,14 @@ public:
         return first == nullptr && last == nullptr;
     }
 
-    void push_back(const int &x);
-    void pop_back();
-    int back() const;
+    void   push_back   (const int &x);
+    void   pop_back    ();
+    int    back        () const;
 
-    void push_front(const int &x);
-    void pop_front();
-    int front() const;
-    void erase();
+    void   push_front  (const int &x);
+    void   pop_front   ();
+    int    front       () const;
+    void   erase       ();
 
 private:
     struct node
@@ -39,31 +39,34 @@ private:
     };
 
     node *first, *last;
-    void copy_DList(const node *from_first, const node *from_last);
-    void delete_DList();
+    void   copy_DList   (const node *from_first, const node *from_last);
+    void   delete_DList ();
 
 public:
     class DIterator
     {
+    private:
         node *current;
         DList *collection;
         DIterator(DList *collection, node *current);
+
     public:
         int &operator*();
 
-        // Инкремент (префиксный)
+        // Increment (prefix)
         DIterator &operator++();
-        // Инкремент (постфиксный)
+        // Increment (postfix)
         DIterator operator++(int);
-        // Декремент (префиксный)
+        // Decrement (prefix)
         DIterator &operator--();
-        // Декремент (постфиксный)
+        // Decrement (postfix)
         DIterator operator--(int);
 
-        bool operator==(const DIterator &it) const;
-        bool operator!=(const DIterator &it) const;
-        bool operator <(const DIterator &it) const;
-        bool operator >(const DIterator &it) const;
+        bool  operator==  (const DIterator &it) const;
+        bool  operator!=  (const DIterator &it) const;
+        bool  operator<   (const DIterator &it) const;
+        bool  operator>   (const DIterator &it) const;
+
         friend class DList;
 
     }; //--class DIterator--//
@@ -74,15 +77,16 @@ public:
     DIterator find(const int &x);
     DIterator findFEGG(const int &x);
 
-    // Вставка элемента, после элемента на который указывает итератор
+    // Inserting of element after element, pointed by iterator
     void insert_after(const DIterator &it, const int &x);
 
-    // Вставка элемента, перед элементом на который указывает итератор
+    // Inserting of element before element, pointed by iterator
     void insert_before(const DIterator &it, const int &x);
 
-    // Удаление элемента на который указывает итератор
+    // Deleting of element, pointed by iterator
     void remove(const DIterator &it);
-friend bool operator==(DList &l1,DList &l2);
+
+    friend bool operator==(DList &l1, DList &l2);
 };   //--class DList--//
 
 std::ostream &operator<<(std::ostream &os, DList &l);
